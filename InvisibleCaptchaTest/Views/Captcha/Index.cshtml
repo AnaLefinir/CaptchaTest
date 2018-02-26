@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewData["Title"] = "Invisible Captcha Test";
+}
+
+<script>
+    function onSubmit(token) {
+        alert("Token received. Submitting ...");
+        // 2) Ejecutamos el submit del form, dado que ya pasó la validación y también obtuvimos el token
+        document.getElementById('testForm').submit();
+    }
+
+    function validate(event) {
+        // cancelamos el submit
+        event.preventDefault();
+        if (!document.getElementById('field').value) {
+            // Si no pasa la validación, actuamos en consecuencia
+            alert("You must add text to the required field");
+        } else {
+            // 1) Si pasa la validación pedimos el token
+            grecaptcha.execute();
+        }
+    }
+
+    function onload() {
+        // Suscribimos el click del botón submit a la función "validate"
+        var element = document.getElementById('btnSubmit');
+        element.onclick = validate;
+    }
+</script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<h2>Invisible Captcha Test</h2>
+
+<form id="testForm" action="@Url.Action("PostFormDataAction")" method="post">
+    Name: (required) <input id="field" name="field">
+    <div id='recaptcha' class="g-recaptcha"
+         data-sitekey="@ViewBag.CaptchaSiteKey"
+         data-callback="onSubmit"
+         data-size="invisible"></div>
+    <button id='btnSubmit'>Submit</button>
+</form>
+<script>onload();</script>
+
+
